@@ -6,8 +6,10 @@
  * to output it as a styled HTML table.
  */
 
-$database = 'nba2019';
 require_once('vendor/autoload.php');
+require_once('include/config.php');
+require_once('classes/DbMysqli.php');
+require_once('classes/Team.php');
 require_once('include/utils.php');
 
 /*
@@ -15,11 +17,16 @@ require_once('include/utils.php');
  * -------------
  * Retrieve all team codes & names
  */
+
+$db = new DbMysqli( array(
+  'host' => $_CONFIG['db']['host'],
+  'table' => $_CONFIG['db']['table'],
+  'username' => $_CONFIG['db']['username'],
+  'password' => $_CONFIG['db']['password']
+) );
+
 echo '<h1>Example Query</h1>';
-$teamSql = "SELECT * FROM team";
-$teamResult = query($teamSql);
-// dd($teamResult);
-echo asTable($teamResult);
+echo asTable((new Team($db))->all());
 
 /*
  * Report 1
